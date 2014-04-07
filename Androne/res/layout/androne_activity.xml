@@ -1,0 +1,6 @@
+<de.dhbw.androne.view.tabs.NonSwipeableViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/androne_activity_pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+</de.dhbw.androne.view.tabs.NonSwipeableViewPager>

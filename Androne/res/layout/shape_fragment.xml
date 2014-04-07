@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/text_view_altitude"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_view_altitude" />
+
+    <TextView
+        android:id="@+id/text_view_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_view_state" />
+
+    <TextView
+        android:id="@+id/text_view_battery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/text_view_battery" />
+
+    <RelativeLayout
+        android:id="@+id/shape_control_panel"
+        android:layout_width="100dp"
+        android:layout_height="fill_parent"
+		android:layout_marginTop="20dp"
+		android:layout_marginLeft="10dp"
+		android:layout_marginBottom="20dp"
+        android:layout_below="@id/text_view_altitude" >
+
+        <Spinner
+            android:id="@+id/shape_chooser"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:entries="@array/shape_chooser_entries" />
+
+        <CheckBox
+            android:id="@+id/shape_check_change_direction"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/shape_change_direction" />
+
+        <Button
+            android:id="@+id/shape_button_start"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/shape_fly_start" />
+    </RelativeLayout>
+<!-- 
+    <LinearLayout
+        android:id="@+id/shape_control_panel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/text_view_altitude"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/shape_chooser"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:entries="@array/shape_chooser_entries" />
+
+        <CheckBox
+            android:id="@+id/shape_check_change_direction"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/shape_change_direction" />
+
+        <Button
+            android:id="@+id/shape_button_start"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shape_fly_start" />
+    </LinearLayout>
+ 
+    <LinearLayout
+        android:id="@+id/shape_value_panel"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/text_view_battery"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+-->
+
+	<RelativeLayout         
+	    android:id="@+id/shape_value_panel"
+        android:layout_width="100dp"
+        android:layout_height="fill_parent"
+       	android:layout_below="@id/text_view_battery"
+       	android:layout_alignParentRight="true"
+       	android:layout_marginTop="20dp" 
+       	android:layout_marginRight="10dp" 
+       	android:layout_marginBottom="20dp" >
+	    
+        <TextView
+            android:id="@+id/shape_width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/shape_width" />
+
+        <TextView
+            android:id="@+id/shape_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/shape_height" />
+
+        <Button
+            android:id="@+id/shape_button_show_value_picker"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/shape_set_values" />
+	</RelativeLayout>
+
+    <de.dhbw.androne.view.shape.TriangleView
+        android:id="@+id/shape_triangle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_altitude"
+        android:layout_margin="10dp"
+        android:layout_toLeftOf="@id/shape_value_panel"
+        android:layout_toRightOf="@id/shape_control_panel" />
+
+    <de.dhbw.androne.view.shape.RectangleView
+        android:id="@+id/shape_rectangle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_altitude"
+        android:layout_margin="10dp"
+        android:layout_toLeftOf="@id/shape_value_panel"
+        android:layout_toRightOf="@id/shape_control_panel" />
+
+</RelativeLayout>

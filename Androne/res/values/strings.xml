@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Maven Quickstart</string>
-    <string name="hello">Hello Androne!</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <!-- Global strings -->
+    <string name="app_name">Androne</string>
 
+    <!-- Menu strings -->
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="menu_take_off">Take off</string>
+   	<string name="menu_land">Land</string>
+    <string name="menu_settings">Settings</string>
+
+    <!-- Status strings -->
+    <string name="text_view_battery">Battery: </string>
+    <string name="text_view_state">State: </string>
+    <string name="text_view_altitude">Altitude: </string>
+    
+    <!-- Shape strings -->
+    <string-array name="shape_chooser_entries">
+        <item>Rectangle</item>
+        <item>Triangle</item>
+    </string-array>
+    <string name="shape_set_values">Set</string>
+    <string name="shape_change_direction">Change direction</string>
+	<string name="shape_fly_start">Start</string>
+	<string name="shape_fly_stop">Stop</string>
+	<string name="shape_width">Width:</string>
+	<string name="shape_height">Height:</string>
+    
+	<!-- Shape picker strings -->
+	<string name="shape_picker_width">Width / m:</string>
+	<string name="shape_picker_height">Height / m:</string>
+	
 </resources>

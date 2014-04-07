@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_centerHorizontal="true"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp">
+
+    <TextView
+        android:id="@+id/shape_picker_width_text_view"
+        android:text="@string/shape_picker_width" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dp"/>
+    
+    <NumberPicker
+        android:id="@+id/shape_picker_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/shape_picker_width_text_view"
+        android:layout_centerVertical="true"/>
+    
+    <NumberPicker
+        android:id="@+id/shape_picker_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+    <TextView
+        android:id="@+id/shape_picker_height_text_view"
+        android:text="@string/shape_picker_height" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/shape_picker_height"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dp"/>
+</RelativeLayout>
