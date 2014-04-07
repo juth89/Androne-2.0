@@ -1,5 +1,7 @@
 package de.dhbw.androne.controller;
 
+import java.io.IOException;
+
 import android.util.Log;
 
 import com.codeminders.ardrone.ARDrone;
@@ -38,6 +40,12 @@ public class ShapeController {
 				flyShape(shapeFragment.getShape());
 				isFlying = false;
 				shapeFragment.resetStart();
+			}
+		} else {
+			try {
+				drone.hover();
+			} catch (IOException e) {
+				Log.e(TAG, e.getMessage());
 			}
 		}
 	}
@@ -117,7 +125,6 @@ public class ShapeController {
 			public void run() {
 				try {
 					angularController.rotate(degrees);
-					Thread.sleep(DroneController.SLEEP_TIME);
 				} catch (Exception e) {
 					Log.e(TAG, e.getMessage());
 				}

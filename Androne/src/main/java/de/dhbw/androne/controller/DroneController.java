@@ -1,11 +1,14 @@
 package de.dhbw.androne.controller;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import android.util.Log;
 
 import com.codeminders.ardrone.ARDrone;
 import com.codeminders.ardrone.ARDrone.State;
+import com.codeminders.ardrone.DroneCommand;
+import com.codeminders.ardrone.DroneStatusChangeListener;
 import com.codeminders.ardrone.NavData;
 import com.codeminders.ardrone.NavDataListener;
 import com.codeminders.ardrone.data.navdata.FlyingState;
@@ -110,26 +113,73 @@ public class DroneController implements Runnable, NavDataListener {
 		} else if(State.ERROR == drone.getState()) {
 			
 		}
+		shapeController.updateLoop();
 	}
 	
 	
 	private void connect() {
-		
+		Log.e(TAG, command.name());
+		try {
+			drone.addStatusChangeListener(new DroneStatusChangeListener() {
+				
+				public void ready() {
+					try {
+						drone.disableVideo();
+						drone.setCombinedYawMode(true);
+						drone.trim();
+					} catch (IOException e) {
+						Log.e(TAG, "CONNECT LISTENER", e);
+					}
+				}
+			});
+			
+			drone.connect();
+			drone.waitForReady(SLEEP_TIME);
+            drone.clearEmergencySignal();
+
+		} catch(IOException e) {
+			Log.e(TAG, e.getMessage());
+			initDrone();
+		}
+		command = null;
 	}
 	
 	
 	private void disconnect() {
-		
+		Log.e(TAG, command.name());
+		try {
+			drone.disconnect();
+			
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		command = null;
 	}
 	
 	
 	private void takeOff() {
-		
+		Log.e(TAG, command.name());
+		try {
+			drone.takeOff();
+			drone.trim();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		command = null;
 	}
 	
 	
 	private void land() {
-		
+		Log.e(TAG, command.name());
+		try {
+			drone.land();
+			Thread.sleep(5000);
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (InterruptedException e) {
+			Log.e(TAG, e.getMessage());
+		}
+		command = null;
 	}
 
 	

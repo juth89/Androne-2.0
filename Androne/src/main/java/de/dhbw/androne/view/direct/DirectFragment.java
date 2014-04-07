@@ -33,7 +33,6 @@ public class DirectFragment extends ControllerFragment implements OnTouchListene
 		
 		for(ImageButton button : buttons) {
 			button.setOnTouchListener(this);
-//			button.set
 		}
 		
 		return view;

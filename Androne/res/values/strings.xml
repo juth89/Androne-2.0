@@ -32,4 +32,10 @@
 	<string name="shape_picker_width">Width / m:</string>
 	<string name="shape_picker_height">Height / m:</string>
 	
+	<!-- Polygon Strings -->
+	<string name="polygon_delete_last">Delete last</string>
+	<string name="polygon_delete_all">Delete all</string>
+	<string name="polygon_fly_start">Start</string>
+	<string name="polygon_fly_stop">Stop</string>
+	
 </resources>

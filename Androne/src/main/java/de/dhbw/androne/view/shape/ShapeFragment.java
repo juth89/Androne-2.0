@@ -66,7 +66,7 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 
 	@Override
 	protected void disableControls() {
-		btnStart.setEnabled(false);
+//		btnStart.setEnabled(false);
 	}
 
 	

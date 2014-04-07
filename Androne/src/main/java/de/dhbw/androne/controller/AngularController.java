@@ -36,6 +36,7 @@ public class AngularController implements NavDataListener {
 		while(absDegrees >= yawSum) {
 			try {
 				drone.move(0, 0, 0, angularSpeed);
+				Thread.sleep(DroneController.SLEEP_TIME);
 			} catch(Exception e) {
 				Log.e(TAG, e.getMessage());
 			}

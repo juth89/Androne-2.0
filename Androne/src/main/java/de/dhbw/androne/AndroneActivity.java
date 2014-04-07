@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import de.dhbw.androne.Androne.Command;
 import de.dhbw.androne.Androne.FlyingMode;
 import de.dhbw.androne.controller.DroneController;
 import de.dhbw.androne.view.UserInterfaceUpdater;
@@ -78,15 +79,15 @@ public class AndroneActivity extends FragmentActivity implements TabListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.menu_connect) {
 			if(item.getTitle().equals(getResources().getString(R.string.menu_connect))) {
-				// CONNECT
+				droneController.setCommand(Command.CONNECT);
 			} else if(item.getTitle().equals(getResources().getString(R.string.menu_disconnect))) {
-				// DISCONNECT
+				droneController.setCommand(Command.DISCONNECT);
 			}
 		} else if(item.getItemId() == R.id.menu_take_off) {
 			if(item.getTitle().equals(getResources().getString(R.string.menu_take_off))) {
-				// TAKE OFF
+				droneController.setCommand(Command.TAKE_OFF);
 			} else if(item.getTitle().equals(getResources().getString(R.string.menu_land))) {
-				// LAND
+				droneController.setCommand(Command.LAND);
 			}
 		} else if(item.getItemId() == R.id.menu_settings) {
 			
