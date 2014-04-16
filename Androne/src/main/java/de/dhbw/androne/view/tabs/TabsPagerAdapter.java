@@ -12,8 +12,6 @@ import de.dhbw.androne.view.shape.ShapeFragment;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
-	private static final String TAG = "TabsPagerAdapter";
-	
 	private List<Fragment> fragments = new ArrayList<Fragment>();
 	private int currentIndex;
 

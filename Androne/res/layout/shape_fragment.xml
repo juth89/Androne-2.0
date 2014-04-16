@@ -144,15 +144,15 @@
             android:text="@string/shape_set_values" />
 	</RelativeLayout>
 
-    <de.dhbw.androne.view.shape.TriangleView
-        android:id="@+id/shape_triangle_view"
+    <de.dhbw.androne.view.shape.ShapeView
+        android:id="@+id/shape_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_view_altitude"
         android:layout_margin="10dp"
         android:layout_toLeftOf="@id/shape_value_panel"
         android:layout_toRightOf="@id/shape_control_panel" />
-
+<!-- 
     <de.dhbw.androne.view.shape.RectangleView
         android:id="@+id/shape_rectangle_view"
         android:layout_width="wrap_content"
@@ -161,5 +161,5 @@
         android:layout_margin="10dp"
         android:layout_toLeftOf="@id/shape_value_panel"
         android:layout_toRightOf="@id/shape_control_panel" />
-
+ -->
 </RelativeLayout>

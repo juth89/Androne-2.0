@@ -12,10 +12,9 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
+import de.dhbw.androne.Androne.Command;
 import de.dhbw.androne.R;
-import de.dhbw.androne.model.Rectangle;
 import de.dhbw.androne.model.Shape;
-import de.dhbw.androne.model.Triangle;
 import de.dhbw.androne.view.ControllerFragment;
 
 public class ShapeFragment extends ControllerFragment implements OnItemSelectedListener, OnCheckedChangeListener, OnClickListener {
@@ -24,14 +23,9 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 	private CheckBox changeDirection;
 	private Button btnSetValues, btnStart;
 	private TextView tvWidth, tvHeight;
-	private RectangleView rectangeView;
-	private TriangleView triangleView;
-	private ShapeView currentView;
+	private ShapeView shapeView;
 	
 	private ShapeValuePicker valuePicker;
-	
-	private boolean flyShape = false;
-	private Shape currentShape;
 	
 	
 	@Override
@@ -44,9 +38,8 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 		btnStart = (Button) view.findViewById(R.id.shape_button_start);
 		tvWidth = (TextView) view.findViewById(R.id.shape_width);
 		tvHeight = (TextView) view.findViewById(R.id.shape_height);
-		
-		rectangeView = (RectangleView) view.findViewById(R.id.shape_rectangle_view);
-		triangleView = (TriangleView) view.findViewById(R.id.shape_triangle_view);
+
+		shapeView = (ShapeView) view.findViewById(R.id.shape_view);
 
 		shapeChooser.setOnItemSelectedListener(this);
 		changeDirection.setOnCheckedChangeListener(this);
@@ -66,7 +59,7 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 
 	@Override
 	protected void disableControls() {
-//		btnStart.setEnabled(false);
+		btnStart.setEnabled(false);
 	}
 
 	
@@ -74,25 +67,22 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 	 * Spinner Listener
 	 */
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-		rectangeView.setVisibility(View.INVISIBLE);
-		triangleView.setVisibility(View.INVISIBLE);
-		
 		Object item = parent.getItemAtPosition(pos);
 		
 		String[] shapes = getResources().getStringArray(R.array.shape_chooser_entries);
 		
 		if(item.equals(shapes[0])) {
-			currentView = rectangeView;
+			shapeView.setRectangle();
 		} else if(item.equals(shapes[1])) {
-			currentView = triangleView;
+			shapeView.setTriangle();
 		}
 		
-		currentView.setVisibility(View.VISIBLE);
-		currentView.invalidate();
-		valuePicker.setShapeView(currentView);
+		valuePicker.setShapeView(shapeView);
 	
-		setWidth(currentView.getShapeWidth());
-		setHeight(currentView.getShapeHeight());
+		changeDirection.setChecked(shapeView.getCurrentShape().flyRight());
+		
+		setWidth(shapeView.getShapeWidth());
+		setHeight(shapeView.getShapeHeight());
 	}
 
 	
@@ -102,9 +92,8 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 	/**
 	 * Checkbox Listener
 	 */
-	public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-		// TODO Auto-generated method stub
-		
+	public void onCheckedChanged(CompoundButton arg0, boolean flyRight) {
+		shapeView.setDirection(flyRight);
 	}
 
 	
@@ -117,18 +106,11 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 		} else if(view.getId() == R.id.shape_button_start) {
 			Button btn = (Button) view;
 			if(btn.getText().equals(getResources().getString(R.string.shape_fly_start))) {
-				flyShape = true;
-				
-				if(currentView instanceof RectangleView) {
-					currentShape = new Rectangle(currentView.getShapeWidth(), currentView.getShapeHeight(), changeDirection.isChecked());
-				} else if(currentView instanceof TriangleView) {
-					currentShape = new Triangle(currentView.getShapeWidth(), currentView.getShapeHeight(), changeDirection.isChecked());
-					
-				}
-				
 				btn.setText(getResources().getString(R.string.shape_fly_stop));
+				droneController.setCommand(Command.START_FLY_SHAPE);
 			} else if(btn.getText().equals(getResources().getString(R.string.shape_fly_stop))) {
-				resetStart();
+				btn.setText(getResources().getString(R.string.shape_fly_start));
+				droneController.setCommand(Command.STOP_FLY_SHAPE);
 			}
 		}
 	}
@@ -139,24 +121,20 @@ public class ShapeFragment extends ControllerFragment implements OnItemSelectedL
 		tvWidth.setText(text);
 	}
 	
-	
 	public void setHeight(int height) {
 		String text = getResources().getString(R.string.shape_height) + " " + height + " m";
 		tvHeight.setText(text);
 	}
 	
-	
-	public boolean flyShape() {
-		return flyShape;
-	}
-	
 	public Shape getShape() {
-		return currentShape;
+		return shapeView.getCurrentShape();
 	}
-	
-	public void resetStart() {
-		flyShape = false;
-		currentShape = null;
-		btnStart.setText(getResources().getString(R.string.shape_fly_start));
+
+	public void resetStartButton() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				btnStart.setText(getResources().getString(R.string.shape_fly_start));
+			}
+		});
 	}
 }

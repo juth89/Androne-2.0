@@ -1,4 +1,4 @@
-package de.dhbw.androne.controller;
+package de.dhbw.androne.controller.pertime;
 
 import android.util.Log;
 
@@ -6,6 +6,9 @@ import com.codeminders.ardrone.ARDrone;
 import com.codeminders.ardrone.NavData;
 import com.codeminders.ardrone.NavDataListener;
 
+import de.dhbw.androne.controller.DroneController;
+
+@Deprecated
 public class AngularController implements NavDataListener {
 
 	private static final String TAG = "AngularController";

@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.codeminders.ardrone.ARDrone;
 import com.codeminders.ardrone.ARDrone.State;
-import com.codeminders.ardrone.DroneCommand;
 import com.codeminders.ardrone.DroneStatusChangeListener;
 import com.codeminders.ardrone.NavData;
 import com.codeminders.ardrone.NavDataListener;
@@ -25,9 +24,7 @@ public class DroneController implements Runnable, NavDataListener {
 	private static final String TAG = "DroneController";
 	private boolean running = true;
 
-	private AndroneActivity androneActivity;
-	
-	static final long SLEEP_TIME = 5;
+	public static final long SLEEP_TIME = 5;
 	
 	private ARDrone drone;
 	private Command command;
@@ -40,13 +37,11 @@ public class DroneController implements Runnable, NavDataListener {
 	
 	
 	public DroneController(AndroneActivity androneActivity) {
-		this.androneActivity = androneActivity;
-		
 		initDrone();
 		
 		directController = new DirectController(drone, (DirectFragment)androneActivity.getFragment(0));
-		shapeController = new ShapeController(drone, (ShapeFragment)androneActivity.getFragment(1));
-		polygonController = new PolygonController(drone, (PolygonFragment)androneActivity.getFragment(2));
+		shapeController = new ShapeController(drone, this, (ShapeFragment)androneActivity.getFragment(1));
+		polygonController = new PolygonController(drone, this, (PolygonFragment)androneActivity.getFragment(2));
 		
 		setFlyingMode(FlyingMode.DIRECT);
 	}
@@ -80,11 +75,14 @@ public class DroneController implements Runnable, NavDataListener {
 	
 	
 	private void updateLoop() {
-		if(State.DISCONNECTED == drone.getState()) {
+		State state = drone.getState();
+		flyingState = FlyingState.FLYING;
+
+		if(State.DISCONNECTED == state) {
 			if(Command.CONNECT == command) {
 				connect();
 			}
-		} else if(State.DEMO == drone.getState()) {
+		} else if(State.DEMO == state) {
 			if(FlyingState.LANDED == flyingState) {
 				
 				if(Command.TAKE_OFF == command) {
@@ -105,15 +103,14 @@ public class DroneController implements Runnable, NavDataListener {
 				if(FlyingMode.DIRECT == flyingMode) {
 					directController.updateLoop();
 				} else if(FlyingMode.SHAPE == flyingMode) {
-					shapeController.updateLoop();
+					shapeController.updateLoop(command);
 				} else if(FlyingMode.POLYGON == flyingMode) {
-					polygonController.updateLoop();
+					polygonController.updateLoop(command);
 				}
 			}
-		} else if(State.ERROR == drone.getState()) {
+		} else if(State.ERROR == state) {
 			
 		}
-		shapeController.updateLoop();
 	}
 	
 	
@@ -180,6 +177,15 @@ public class DroneController implements Runnable, NavDataListener {
 			Log.e(TAG, e.getMessage());
 		}
 		command = null;
+	}
+	
+	
+	public void hover() {
+		try {
+			drone.hover();
+		} catch (IOException e) {
+			Log.e(TAG, e.getMessage());
+		}
 	}
 
 	

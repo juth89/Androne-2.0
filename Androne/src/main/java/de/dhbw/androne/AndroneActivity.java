@@ -135,5 +135,10 @@ public class AndroneActivity extends FragmentActivity implements TabListener {
 	public Fragment getFragment(int index) {
 		return pagerAdapter.getItem(index);
 	}
+	
+	
+	public DroneController getDroneController() {
+		return droneController;
+	}
 
 }

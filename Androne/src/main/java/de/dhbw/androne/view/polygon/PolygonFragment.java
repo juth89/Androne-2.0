@@ -5,7 +5,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import de.dhbw.androne.Androne.Command;
 import de.dhbw.androne.R;
+import de.dhbw.androne.model.Polygon;
 import de.dhbw.androne.view.ControllerFragment;
 
 public class PolygonFragment extends ControllerFragment implements OnClickListener {
@@ -47,9 +49,11 @@ public class PolygonFragment extends ControllerFragment implements OnClickListen
 			polygonView.clearAll();
 		} else if(v.getId() == R.id.polygon_button_start) {
 			if(btnStart.getText().equals(getResources().getString(R.string.polygon_fly_start))) {
-				
+				btnStart.setText(getResources().getString(R.string.polygon_fly_stop));
+				droneController.setCommand(Command.START_FLY_POLYGON);
 			} else if(btnStart.getText().equals(getResources().getString(R.string.polygon_fly_stop))) {
-				
+				btnStart.setText(getResources().getString(R.string.polygon_fly_start));
+				droneController.setCommand(Command.STOP_FLY_POLYGON);
 			}
 		}
 	}
@@ -58,6 +62,20 @@ public class PolygonFragment extends ControllerFragment implements OnClickListen
 	public void setButtons(boolean enabled) {
 		btnDeleteLast.setEnabled(enabled);
 		btnDeleteAll.setEnabled(enabled);
+	}
+
+	
+	public Polygon getPolygon() {
+		return polygonView.getPolygon();
+	}
+	
+	
+	public void resetStartButton() {
+		getActivity().runOnUiThread(new Runnable() {
+			public void run() {
+				btnStart.setText(getResources().getString(R.string.polygon_fly_start));
+			}
+		});
 	}
 
 }

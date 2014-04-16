@@ -69,7 +69,7 @@ public class ShapeValuePicker extends DialogFragment {
 
 		NumberPicker widthPicker = (NumberPicker)view.findViewById(R.id.shape_picker_width);
 		widthPicker.setMinValue(MIN_WIDTH);
-		widthPicker.setMaxValue(shapeView.getVerticalLineCount() - 2);
+		widthPicker.setMaxValue(shapeView.getVerticalLineCount() - 4);
 		widthPicker.setWrapSelectorWheel(false);
 		widthPicker.setLongClickable(false);
 		widthPicker.setValue(shapeView.getShapeWidth());
@@ -81,7 +81,7 @@ public class ShapeValuePicker extends DialogFragment {
 		
 		NumberPicker heightPicker = (NumberPicker)view.findViewById(R.id.shape_picker_height);
 		heightPicker.setMinValue(MIN_HEIGHT);
-		heightPicker.setMaxValue(shapeView.getHorizontalLineCount() - 2);
+		heightPicker.setMaxValue(shapeView.getHorizontalLineCount() - 4);
 		heightPicker.setWrapSelectorWheel(false);
 		heightPicker.setLongClickable(false);
 		heightPicker.setValue(shapeView.getShapeHeight());

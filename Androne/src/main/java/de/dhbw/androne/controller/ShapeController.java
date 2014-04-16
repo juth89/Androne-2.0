@@ -1,53 +1,72 @@
 package de.dhbw.androne.controller;
 
-import java.io.IOException;
-
 import android.util.Log;
 
 import com.codeminders.ardrone.ARDrone;
 
+import de.dhbw.androne.Androne.Command;
+import de.dhbw.androne.controller.pertime.ControllerLock;
+import de.dhbw.androne.controller.pertime.DistanceController;
+import de.dhbw.androne.controller.pertime.RotationController;
 import de.dhbw.androne.model.Rectangle;
 import de.dhbw.androne.model.Shape;
 import de.dhbw.androne.model.Triangle;
 import de.dhbw.androne.view.shape.ShapeFragment;
 
-public class ShapeController {
+public class ShapeController implements ControllerLock {
 
 	private static final String TAG = "ShapeController";
 
-	private static final float FORWARD_SPEED = 2; // 2 m/s
+	private static final long SLEEP_TIME = 100;
 	
-	private ARDrone drone;
+	private DroneController droneController;
 	private ShapeFragment shapeFragment;
 	
-	private boolean isFlying;
-	private boolean lock;
+	private boolean lock, fly;
 	
-	private AngularController angularController;
+	private DistanceController distanceController;
+	private RotationController rotationController;
 	
 	
-	public ShapeController(ARDrone drone, ShapeFragment shapeFragment) {
-		this.drone = drone;
+	public ShapeController(ARDrone drone, DroneController droneController, ShapeFragment shapeFragment) {
+		this.droneController = droneController;
 		this.shapeFragment = shapeFragment;
-		angularController = new AngularController(drone);
+		distanceController = new DistanceController(this, drone);
+		rotationController = new RotationController(this, drone);
 	}
 
 	
-	public void updateLoop() {
-		if(shapeFragment.flyShape()) {
-			if(!isFlying) {
-				isFlying = true;
-				flyShape(shapeFragment.getShape());
-				isFlying = false;
-				shapeFragment.resetStart();
-			}
+	public void updateLoop(Command command) {
+		if(Command.START_FLY_SHAPE == command) {
+			startFlyShape();
+		} else if(Command.STOP_FLY_SHAPE == command) {
+			stopFlyShape();
 		} else {
-			try {
-				drone.hover();
-			} catch (IOException e) {
-				Log.e(TAG, e.getMessage());
-			}
+			droneController.hover();
 		}
+	}
+	
+	
+	private void startFlyShape() {
+		Shape shape = shapeFragment.getShape();
+		
+		distanceController.start();
+		rotationController.start();
+		
+		fly = true;
+		flyShape(shape);
+		
+		droneController.setCommand(null);
+	}
+	
+	
+	private void stopFlyShape() {
+		distanceController.stop();
+		rotationController.stop();
+		
+		fly = false;
+		unlock();
+		droneController.setCommand(null);
 	}
 	
 	
@@ -63,89 +82,98 @@ public class ShapeController {
 	
 	
 	private void flyRectangle(Rectangle rectangle) {
-		int firstDistance, secondDistance;
-		int degrees;
+		final float width = rectangle.getWidth();
+		final float height = rectangle.getHeight();
+		final float degrees;
 		
 		if(rectangle.flyRight()) {
-			firstDistance = rectangle.getWidth();
-			secondDistance = rectangle.getHeight();
 			degrees = 90;
 		} else {
-			firstDistance = rectangle.getHeight();
-			secondDistance = rectangle.getWidth();
 			degrees = -90;
 		}
 		
-		for(int i = 0; i < 2; i++) {
-			flyForward(firstDistance);
-			sleepUntilLockOpen();
-			rotate(degrees);
-			sleepUntilLockOpen();
-			flyForward(secondDistance);
-			sleepUntilLockOpen();
-			rotate(degrees);
-			sleepUntilLockOpen();
-		}
+		Runnable runnable = new Runnable() {
+			public void run() {
+				for(int i = 0; i < 2; i++) {
+					flyForward(width);
+					rotate(degrees);
+					flyForward(height);
+					rotate(degrees);
+				}
+				shapeFragment.resetStartButton();
+			}
+		};
+		
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 
 	
 	private void flyTriangle(Triangle triangle) {
+		final float a = triangle.getA();
+		final float b = triangle.getB();
+		final float alpha, beta;
 		
+		if(triangle.flyRight()) {
+			alpha = 180 - triangle.getAlpha();
+			beta = 180 - triangle.getBeta();
+		} else {
+			alpha = -180 + triangle.getAlpha();
+			beta = -180 + triangle.getBeta();
+		}
+		
+		Runnable runnable = new Runnable() {
+			public void run() {
+				flyForward(a);
+				rotate(alpha);
+				flyForward(b);
+				rotate(beta);
+				flyForward(b);
+				rotate(alpha);
+				shapeFragment.resetStartButton();
+			}
+		};
+		
+		Thread thread = new Thread(runnable);
+		thread.start();
 	}
 	
 	
 	private void flyForward(float distance) {
-		long flyTime = (long) ((distance / FORWARD_SPEED) * 1000);
-		final long stopTime = System.currentTimeMillis() + flyTime;
-		
-		Runnable forwardRunnable = new Runnable() {
-		
-			public void run() {
-				while(stopTime > System.currentTimeMillis()) {
-					try {
-						drone.move(0, -1, 0, 0);
-						Thread.sleep(DroneController.SLEEP_TIME);
-					} catch (Exception e) {
-						Log.e(TAG, e.getMessage());
-					}
-				}
-				lock = false;
-			}
-
-		};
-
-		Thread forwardThread = new Thread(forwardRunnable);
-		lock = true;
-		forwardThread.start();
-	}
-
-	
-	private void rotate(final float degrees) {
-		Runnable rotateRunnable = new Runnable() {
-			public void run() {
-				try {
-					angularController.rotate(degrees);
-				} catch (Exception e) {
-					Log.e(TAG, e.getMessage());
-				}
-				lock = false;
-				
-			}
-		};
-		
-		Thread rotateThread = new Thread(rotateRunnable);
-		lock = true;
-		rotateThread.start();
+		if(!fly) {
+			return;
+		}
+		distanceController.flyForward(distance);
+		sleepUntilUnlock();
 	}
 	
 	
-	private void sleepUntilLockOpen() {
+	private void rotate(float degrees) {
+		if(!fly) {
+			return;
+		}
+		rotationController.rotate(degrees);
+		sleepUntilUnlock();
+	}
+	
+	
+	private void sleepUntilUnlock() {
 		while(lock) {
 			try {
-				Thread.sleep(DroneController.SLEEP_TIME);
+				Thread.sleep(SLEEP_TIME);
 			} catch (InterruptedException e) {
 				Log.e(TAG, e.getMessage());
 			}
 		}
+	}
+
+	
+	public void lock() {
+		lock = true;
+	}
+	
+	
+	public void unlock() {
+		lock = false;
 	}
 }
