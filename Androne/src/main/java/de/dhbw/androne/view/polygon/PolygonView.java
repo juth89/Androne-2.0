@@ -144,30 +144,6 @@ public class PolygonView extends View implements OnTouchListener {
 	}
 	
 	
-	private void drawScale() {
-		int startX = lineDistance;
-		int startY = lineDistance;
-		int stopX = lineDistance * 2;
-		int stopY = lineDistance;
-		
-		Path path = new Path();
-		path.moveTo(startX, startY);
-		path.lineTo(stopX, stopY);
-		canvas.drawPath(path, pDottedLine);
-	
-		startY = lineDistance - lineDistance * 3 / 16;
-		stopY = lineDistance + lineDistance * 3 / 16;
-		
-		canvas.drawLine(startX, startY, startX, stopY, pCyanLine);
-		canvas.drawLine(stopX, startY, stopX, stopY, pCyanLine);
-		
-		startX = lineDistance + lineDistance / 2;
-		startY = lineDistance - lineDistance / 4;
-		
-		canvas.drawText("1 m", startX, startY, pFont);
-	}
-	
-	
 	private void drawWidthHeight() {
 		int maxX = 0, minX = (lineDistance * verticalLineCount), maxY = 0, minY = (lineDistance * horizontalLineCount);
 		if(points.size() < 1) {
@@ -267,18 +243,13 @@ public class PolygonView extends View implements OnTouchListener {
 			float touchX = (int) arg1.getX();
 			float touchY = (int) arg1.getY();
 
-			// if touch is near to the scale area then return
-//			if(touchX < (lineDistance * 3) && touchY < (lineDistance * 2) || touchX < lineDistance || touchY < lineDistance || touchX > (lineDistance * verticalLineCount) || touchY > (lineDistance * (horizontalLineCount - 1))) {
-//				return true;
-//			}
-			
 			int x = Math.round(touchX / lineDistance) * lineDistance;
 			int y = Math.round(touchY / lineDistance) * lineDistance;
 
+			// only allow points not on the border
 			if(y <= lineDistance || y >= (horizontalLineCount * lineDistance - lineDistance) || x < lineDistance || x >= (lineDistance * verticalLineCount - lineDistance)) {
 				return true;
 			}
-			
 			
 			// if touch is to near to last point then return
 			if(points.size() > 0) {
