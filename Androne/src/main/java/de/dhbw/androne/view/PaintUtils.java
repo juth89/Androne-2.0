@@ -6,6 +6,11 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 
+/**
+ * 
+ * Creates the Paints for font, lines and points in relation to the scale
+ * 
+ */
 public class PaintUtils {
 
 	private static final int CYAN = Color.rgb(51, 181, 229);

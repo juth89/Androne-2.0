@@ -64,6 +64,8 @@ public class UserInterfaceUpdater implements Runnable, NavDataListener {
 				
 				if(state == State.DISCONNECTED) {
 					controllerFragment.disableControls();
+					controllerFragment.setAltitude(0);
+					controllerFragment.setBattery(0);
 				} else if(state == State.DEMO){
 					if(navData.getFlyingState() == FlyingState.FLYING) {
 						controllerFragment.enableControls();
