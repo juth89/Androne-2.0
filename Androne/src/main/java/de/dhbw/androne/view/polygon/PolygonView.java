@@ -153,8 +153,8 @@ public class PolygonView extends View implements OnTouchListener {
 		path.lineTo(stopX, stopY);
 		canvas.drawPath(path, pDottedLine);
 	
-		startY = lineDistance - lineDistance / 4;
-		stopY = lineDistance + lineDistance / 4;
+		startY = lineDistance - lineDistance * 3 / 16;
+		stopY = lineDistance + lineDistance * 3 / 16;
 		
 		canvas.drawLine(startX, startY, startX, stopY, pCyanLine);
 		canvas.drawLine(stopX, startY, stopX, stopY, pCyanLine);
