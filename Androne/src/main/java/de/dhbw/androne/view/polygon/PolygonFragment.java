@@ -28,7 +28,6 @@ public class PolygonFragment extends ControllerFragment implements OnClickListen
 		btnDeleteLast.setOnClickListener(this);
 		btnDeleteAll.setOnClickListener(this);
 		btnStart.setOnClickListener(this);
-		
 		return view;
 	}
 

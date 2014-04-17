@@ -1,15 +1,7 @@
 package de.dhbw.androne;
 /*
  * TODO:
- * - Rectangle
- * 		- drawDrone
- * - Triangle
- * 		- drawDrone
- * 		- drawWidthHeight
- * 		- flyTriangle
- * - Polygon
- * 		- drawMaßstab
- * 		- flyPolygon
+ *	REMOVE COMMENTS IN DISTANCE AND ROTATION CONTROLLER TO FLY
  */
 public abstract class Androne {
 

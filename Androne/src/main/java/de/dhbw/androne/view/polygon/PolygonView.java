@@ -21,7 +21,7 @@ import de.dhbw.androne.view.PaintUtils;
 
 public class PolygonView extends View implements OnTouchListener {
 	
-	private List<Point> points = new ArrayList<Point>();
+	private static List<Point> points = new ArrayList<Point>(); // static to hold the points after recreate view
 	
 	protected Canvas canvas;
 	private Paint pGrayLine, pCyanLine, pDottedLine, pDot, pFont;
@@ -129,13 +129,16 @@ public class PolygonView extends View implements OnTouchListener {
 		if(points.size() < 2) {
 			return;
 		}
+		Point p0 = points.get(0);
 		
+		Path path = new Path();
+		path.moveTo(p0.x, p0.y);
 		for(int i = 1; i < points.size(); i++) {
-			Point p1 = points.get(i - 1);
-			Point p2 = points.get(i);
-			
-			canvas.drawLine(p1.x, p1.y, p2.x, p2.y, pCyanLine);
+			Point p = points.get(i);
+			path.lineTo(p.x, p.y);
 		}
+
+		canvas.drawPath(path, pCyanLine);
 	}
 	
 	
@@ -198,12 +201,26 @@ public class PolygonView extends View implements OnTouchListener {
 			float touchX = (int) arg1.getX();
 			float touchY = (int) arg1.getY();
 
+			// if touch is near to the scale area then return
 			if(touchX < (lineDistance * 3) && touchY < (lineDistance * 2) || touchX < lineDistance || touchY < lineDistance || touchX > (lineDistance * verticalLineCount) || touchY > (lineDistance * (horizontalLineCount - 1))) {
 				return true;
 			}
 			
 			int x = Math.round(touchX / lineDistance) * lineDistance;
 			int y = Math.round(touchY / lineDistance) * lineDistance;
+
+			// if touch is to near to last point then return
+			if(points.size() > 0) {
+				Point lastPoint = points.get(points.size() - 1);
+				int lastX = lastPoint.x;
+				int lastY = lastPoint.y;
+
+				if((lastX - lineDistance) <= x && x <= (lastX + lineDistance)) {
+					if((lastY - lineDistance) <= y && y <= (lastY + lineDistance)) {
+						return true;
+					}
+				}
+			}
 			
 			addPoint(x, y);
 			invalidate();
