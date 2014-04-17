@@ -9,7 +9,6 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_take_off">Take off</string>
    	<string name="menu_land">Land</string>
-    <string name="menu_settings">Settings</string>
 
     <!-- Status strings -->
     <string name="text_view_battery">Battery: </string>

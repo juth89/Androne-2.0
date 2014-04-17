@@ -89,8 +89,6 @@ public class AndroneActivity extends FragmentActivity implements TabListener {
 			} else if(item.getTitle().equals(getResources().getString(R.string.menu_land))) {
 				droneController.setCommand(Command.LAND);
 			}
-		} else if(item.getItemId() == R.id.menu_settings) {
-			
 		}
 		return super.onOptionsItemSelected(item);
 	}
