@@ -70,6 +70,12 @@ public class ShapeController implements ControllerLock {
 	}
 	
 	
+	public void stopThreads() {
+		distanceController.stop();
+		rotationController.stop();
+	}
+	
+	
 	private void flyShape(Shape shape) {
 		if(shape instanceof Rectangle) {
 			Rectangle rectangle = (Rectangle)shape;

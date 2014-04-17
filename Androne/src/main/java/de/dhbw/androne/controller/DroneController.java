@@ -70,6 +70,8 @@ public class DroneController implements Runnable, NavDataListener {
 	
 	
 	public void stopThread() {
+		polygonController.stopThreads();
+		shapeController.stopThreads();
 		running = false;
 	}
 	

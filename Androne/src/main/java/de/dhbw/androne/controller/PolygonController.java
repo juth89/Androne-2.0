@@ -71,6 +71,12 @@ public class PolygonController implements ControllerLock {
 	}
 	
 	
+	public void stopThreads() {
+		distanceController.stop();
+		rotationController.stop();
+	}
+	
+	
 	private void flyPolygon() {
 		final Polygon polygon = polygonFragment.getPolygon();
 		
