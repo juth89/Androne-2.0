@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Paint.Align;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +28,7 @@ public class PolygonView extends View implements OnTouchListener {
 	private Paint pGrayLine, pCyanLine, pDottedLine, pDot, pFont;
 	
 	protected int width, height, lineDistance, midX, midY, verticalLineCount;
-	protected int horizontalLineCount = 8;
+	protected int horizontalLineCount = 10;
 	
 	private Bitmap droneBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
 
@@ -66,7 +67,8 @@ public class PolygonView extends View implements OnTouchListener {
 		drawGrid();
 		drawPoints();
 		drawLines();
-		drawScale();
+//		drawScale();
+		drawWidthHeight();
 		drawDrone();
 	}
 
@@ -82,11 +84,11 @@ public class PolygonView extends View implements OnTouchListener {
 	
 	
 	private void getPaints() {
-		pGrayLine = PaintUtils.grayLine(lineDistance * 2 / 3);
-		pCyanLine = PaintUtils.cyanLine(lineDistance * 2 / 3);
-		pDottedLine = PaintUtils.dottedLine(lineDistance * 2 / 3);
-		pDot = PaintUtils.dot(lineDistance * 2 / 3);
-		pFont = PaintUtils.font(lineDistance * 2 / 3);
+		pGrayLine = PaintUtils.grayLine(lineDistance * 5 / 6);
+		pCyanLine = PaintUtils.cyanLine(lineDistance * 5 / 6);
+		pDottedLine = PaintUtils.dottedLine(lineDistance * 5 / 6);
+		pDot = PaintUtils.dot(lineDistance * 5 / 6);
+		pFont = PaintUtils.font(lineDistance * 5 / 6);
 	}
 	
 	
@@ -166,6 +168,70 @@ public class PolygonView extends View implements OnTouchListener {
 	}
 	
 	
+	private void drawWidthHeight() {
+		int maxX = 0, minX = (lineDistance * verticalLineCount), maxY = 0, minY = (lineDistance * horizontalLineCount);
+		if(points.size() < 1) {
+			return;
+		}
+		for(Point p : points) {
+			int x = p.x;
+			int y = p.y;
+			if(x > maxX) {
+				maxX = x;
+			}
+			if(x < minX) {
+				minX = x;
+			}
+			if(y > maxY) {
+				maxY = y;
+			}
+			if(y < minY) {
+				minY = y;
+			}
+		}
+
+		drawWidth(minX, maxX, minY, maxY);
+		drawHeight(minX, maxX, minY, maxY);
+	}
+	
+	private void drawWidth(int minX, int maxX, int minY, int maxY) {
+		int y = minY - lineDistance;
+		int yTop = y - lineDistance * 3 / 16;
+		int yBottom = y + lineDistance * 3 / 16;
+		
+		Path path = new Path();
+		path.moveTo(minX, y);
+		path.lineTo(maxX, y);
+		
+		canvas.drawPath(path, pDottedLine);
+		
+		canvas.drawLine(minX, yTop, minX, yBottom, pCyanLine);
+		canvas.drawLine(maxX, yTop, maxX, yBottom, pCyanLine);
+		
+		int width = (maxX - minX) / lineDistance;
+		
+		canvas.drawText(width + " m", (maxX + minX) / 2, minY - (lineDistance * 5 / 4), pFont);
+	}
+
+	private void drawHeight(int minX, int maxX, int minY, int maxY) {
+		int x = maxX + lineDistance;
+		int xLeft = x - lineDistance * 3 / 16;
+		int xRight = x + lineDistance * 3 / 16;
+		
+		Path path = new Path();
+		path.moveTo(x, minY);
+		path.lineTo(x, maxY);
+		
+		canvas.drawPath(path, pDottedLine);
+		
+		canvas.drawLine(xLeft, minY, xRight, minY, pCyanLine);
+		canvas.drawLine(xLeft, maxY, xRight, maxY, pCyanLine);
+		
+		int height = (maxY - minY) / lineDistance;
+		pFont.setTextAlign(Align.LEFT);
+		canvas.drawText(height + " m", xRight, (maxY + minY) / 2 + lineDistance / 4, pFont); 
+	}
+	
 	private void drawDrone() {
 		Point p1, p2 = null;
 		int x, y;
@@ -202,13 +268,18 @@ public class PolygonView extends View implements OnTouchListener {
 			float touchY = (int) arg1.getY();
 
 			// if touch is near to the scale area then return
-			if(touchX < (lineDistance * 3) && touchY < (lineDistance * 2) || touchX < lineDistance || touchY < lineDistance || touchX > (lineDistance * verticalLineCount) || touchY > (lineDistance * (horizontalLineCount - 1))) {
-				return true;
-			}
+//			if(touchX < (lineDistance * 3) && touchY < (lineDistance * 2) || touchX < lineDistance || touchY < lineDistance || touchX > (lineDistance * verticalLineCount) || touchY > (lineDistance * (horizontalLineCount - 1))) {
+//				return true;
+//			}
 			
 			int x = Math.round(touchX / lineDistance) * lineDistance;
 			int y = Math.round(touchY / lineDistance) * lineDistance;
 
+			if(y <= lineDistance || y >= (horizontalLineCount * lineDistance - lineDistance) || x < lineDistance || x >= (lineDistance * verticalLineCount - lineDistance)) {
+				return true;
+			}
+			
+			
 			// if touch is to near to last point then return
 			if(points.size() > 0) {
 				Point lastPoint = points.get(points.size() - 1);
