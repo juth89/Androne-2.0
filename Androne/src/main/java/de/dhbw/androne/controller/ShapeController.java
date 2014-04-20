@@ -22,7 +22,7 @@ public class ShapeController implements ControllerLock {
 	private DroneController droneController;
 	private ShapeFragment shapeFragment;
 	
-	private boolean lock, fly;
+	private boolean lock, isFlyingShape;
 	
 	private DistanceController distanceController;
 	private RotationController rotationController;
@@ -42,7 +42,9 @@ public class ShapeController implements ControllerLock {
 		} else if(Command.STOP_FLY_SHAPE == command) {
 			stopFlyShape();
 		} else {
-			droneController.hover();
+			if(!isFlyingShape) {
+				droneController.hover();
+			}
 		}
 	}
 	
@@ -53,7 +55,7 @@ public class ShapeController implements ControllerLock {
 		distanceController.start();
 		rotationController.start();
 		
-		fly = true;
+		isFlyingShape = true;
 		flyShape(shape);
 		
 		droneController.setCommand(null);
@@ -64,7 +66,7 @@ public class ShapeController implements ControllerLock {
 		distanceController.stop();
 		rotationController.stop();
 		
-		fly = false;
+		isFlyingShape = false;
 		unlock();
 		droneController.setCommand(null);
 	}
@@ -107,6 +109,7 @@ public class ShapeController implements ControllerLock {
 					rotate(degrees);
 				}
 				shapeFragment.resetStartButton();
+				isFlyingShape = false;
 			}
 		};
 		
@@ -137,6 +140,7 @@ public class ShapeController implements ControllerLock {
 				flyForward(b);
 				rotate(alpha);
 				shapeFragment.resetStartButton();
+				isFlyingShape = false;
 			}
 		};
 		
@@ -146,7 +150,7 @@ public class ShapeController implements ControllerLock {
 	
 	
 	private void flyForward(float distance) {
-		if(!fly) {
+		if(!isFlyingShape) {
 			return;
 		}
 		distanceController.flyForward(distance);
@@ -155,7 +159,7 @@ public class ShapeController implements ControllerLock {
 	
 	
 	private void rotate(float degrees) {
-		if(!fly) {
+		if(!isFlyingShape) {
 			return;
 		}
 		rotationController.rotate(degrees);

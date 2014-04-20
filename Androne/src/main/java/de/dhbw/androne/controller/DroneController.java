@@ -78,8 +78,6 @@ public class DroneController implements Runnable, NavDataListener {
 	
 	private void updateLoop() {
 		State state = drone.getState();
-		flyingState = FlyingState.FLYING;
-
 		if(State.DISCONNECTED == state) {
 			if(Command.CONNECT == command) {
 				connect();
@@ -113,6 +111,7 @@ public class DroneController implements Runnable, NavDataListener {
 		} else if(State.ERROR == state) {
 			
 		}
+		command = null;
 	}
 	
 	
@@ -133,7 +132,7 @@ public class DroneController implements Runnable, NavDataListener {
 			});
 			
 			drone.connect();
-			drone.waitForReady(SLEEP_TIME);
+			drone.waitForReady(5000);
             drone.clearEmergencySignal();
 
 		} catch(IOException e) {

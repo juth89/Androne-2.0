@@ -32,9 +32,9 @@ public class DistanceController extends ValueController {
 		long flyTime = (long) ((value / VELOCITY) * 1000);
 		long endTime = System.currentTimeMillis() + flyTime;
 		
+		Log.e(TAG, value + " " + (endTime - System.currentTimeMillis()));
 		while(running && System.currentTimeMillis() < endTime) {
-			Log.e(TAG, value + " " + (endTime - System.currentTimeMillis()));
-//			drone.move(0.0f, FRONT_BACK_TILT, 0.0f, 0.0f);
+			drone.move(0.0f, FRONT_BACK_TILT, 0.0f, 0.0f);
 			Thread.sleep(DroneController.SLEEP_TIME);
 		}
 	}

@@ -34,11 +34,11 @@ public class RotationController extends ValueController {
 		
 		while(running && System.currentTimeMillis() < endTime) {
 			Log.e(TAG, value + " " + (endTime - System.currentTimeMillis()));
-//			if(value < 0) {
-//				drone.move(0.0f, 0.0f, 0.0f, -ANGULAR_SPEED);
-//			} else if(value > 0) {
-//				drone.move(0.0f, 0.0f, 0.0f, ANGULAR_SPEED);
-//			}
+			if(value < 0) {
+				drone.move(0.0f, 0.0f, 0.0f, -ANGULAR_SPEED);
+			} else if(value > 0) {
+				drone.move(0.0f, 0.0f, 0.0f, ANGULAR_SPEED);
+			}
 			Thread.sleep(DroneController.SLEEP_TIME);
 		}
 	}

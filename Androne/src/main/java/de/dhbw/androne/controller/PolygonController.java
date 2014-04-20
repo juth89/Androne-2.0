@@ -24,7 +24,7 @@ public class PolygonController implements ControllerLock {
 	private DroneController droneController;
 	private PolygonFragment polygonFragment;
 
-	private boolean lock, fly;
+	private boolean lock, isFlyingPolygon;
 	
 	private DistanceController distanceController;
 	private RotationController rotationController;
@@ -44,7 +44,9 @@ public class PolygonController implements ControllerLock {
 		} else if(Command.STOP_FLY_POLYGON == command) {
 			stopFlyPolygon();
 		} else {
-			droneController.hover();
+			if(!isFlyingPolygon) {
+				droneController.hover();
+			}
 		}
 	}
 
@@ -53,7 +55,7 @@ public class PolygonController implements ControllerLock {
 		distanceController.start();
 		rotationController.start();
 		
-		fly = true;
+		isFlyingPolygon = true;
 		flyPolygon();
 		
 		droneController.setCommand(null);
@@ -64,7 +66,7 @@ public class PolygonController implements ControllerLock {
 		distanceController.stop();
 		rotationController.stop();
 		
-		fly = false;
+		isFlyingPolygon = false;
 		unlock();
 		
 		droneController.setCommand(null);
@@ -95,6 +97,7 @@ public class PolygonController implements ControllerLock {
 					float degrees = Vector2Utils.angleBetween(v1, v2);
 					rotate(degrees);
 				}
+				isFlyingPolygon = false;
 			}
 		};
 		
@@ -104,7 +107,7 @@ public class PolygonController implements ControllerLock {
 	
 	
 	private void flyForward(float distance) {
-		if(!fly) {
+		if(!isFlyingPolygon) {
 			return;
 		}
 		distanceController.flyForward(distance);
@@ -113,7 +116,7 @@ public class PolygonController implements ControllerLock {
 	
 	
 	private void rotate(float degrees) {
-		if(!fly) {
+		if(!isFlyingPolygon) {
 			return;
 		}
 		rotationController.rotate(degrees);
