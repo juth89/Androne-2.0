@@ -19,7 +19,7 @@ public class PolygonController implements ControllerLock {
 
 	private static final String TAG = "PolygonController";
 	
-	private static final long SLEEP_TIME = 100;
+	private static final long SLEEP_TIME = 5;
 	
 	private DroneController droneController;
 	private PolygonFragment polygonFragment;

@@ -17,7 +17,7 @@ public class ShapeController implements ControllerLock {
 
 	private static final String TAG = "ShapeController";
 
-	private static final long SLEEP_TIME = 100;
+	private static final long SLEEP_TIME = 5;
 	
 	private DroneController droneController;
 	private ShapeFragment shapeFragment;
