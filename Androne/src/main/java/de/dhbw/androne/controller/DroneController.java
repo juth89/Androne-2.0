@@ -94,8 +94,8 @@ public class DroneController implements Runnable, NavDataListener {
 			} else if(FlyingState.FLYING == flyingState) {
 				
 				if(Command.DISCONNECT == command) {
-					disconnect();
 					land();
+					disconnect();
 				} else if(Command.LAND == command) {
 					land();
 				}
